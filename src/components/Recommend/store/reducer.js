@@ -4,6 +4,7 @@ import * as actionTypes from './actionTypes';
 const defaultState = fromJS({
     list: [],
     type: -1,
+    detailInfo: {}
 });
 
 export default (state = defaultState, action) => {

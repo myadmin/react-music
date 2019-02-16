@@ -3,12 +3,14 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Toast } from 'antd-mobile';
 import RecommendItem from './pages/RecommendItem';
+
 import { RecommendWrap } from './style';
 import { actionCreators } from './store';
 
 class Recommend extends Component {
     render () {
         const { type, list } = this.props;
+
         return (
             <RecommendWrap>
                 {
