@@ -1,6 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { NavBar, Icon, Toast } from 'antd-mobile';
 import { withRouter } from 'react-router-dom';
 // import BScroll from 'better-scroll';
 import { actionCreators } from './store';
@@ -23,11 +22,7 @@ class Detail extends PureComponent {
 
         return (
             <DetailWrap>
-                <NavBar
-                    mode="dark"
-                    leftContent={<Icon type="left" />}
-                    onLeftClick={() => this.props.goBack()}
-                >{playlist.name}</NavBar>
+                <p>{playlist.name}</p>
                 {
                     type === 0 ? '' :
                     type === 1 ? this.renderDetail(playlist) :
@@ -77,23 +72,6 @@ class Detail extends PureComponent {
     componentDidMount () {
         let id = this.props.match.params.id;
         this.props.getDetailInfo(id);
-    }
-
-    componentDidUpdate () {
-        /*if (this.props.playlist.id) {
-            if (this.props.playlist.tracks.length) {
-                const wrapper = document.querySelector('.wrapper-layer');
-                new BScroll(wrapper, {
-                    click: true
-                });
-            }
-        }*/
-
-        this.loadingToast();
-    }
-
-    loadingToast () {
-        Toast.loading('Loading...', 1);
     }
 }
 

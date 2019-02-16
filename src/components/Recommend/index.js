@@ -1,8 +1,8 @@
 import React, { Component, /*PureComponent*/ } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Toast } from 'antd-mobile';
 import RecommendItem from './pages/RecommendItem';
+import Loading from '../../base/loading';
 
 import { RecommendWrap } from './style';
 import { actionCreators } from './store';
@@ -18,6 +18,7 @@ class Recommend extends Component {
                     type === 1 ? <RecommendItem detail={this.props.detail.bind(this)} data={list} /> :
                     type === 2 ? 'failed' : null
                 }
+                {!list.length ? <div className="loading-container"><Loading /></div> : null}
             </RecommendWrap>
         )
     }
@@ -26,14 +27,6 @@ class Recommend extends Component {
         if (!this.props.list.length) {
             this.props.getList();
         }
-    }
-
-    componentDidUpdate () {
-        this.loadingToast();
-    }
-
-    loadingToast () {
-        Toast.loading('Loading...', 1);
     }
 }
 

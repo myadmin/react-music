@@ -5,11 +5,21 @@ export const RecommendWrap = styled.div`
     width: 100%;
     top: 88px;
     bottom: 0;
+    .loading-container {
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+    }
 `;
 
 export const RecommendItemWrap = styled.div`
     height: 100%;
     overflow: hidden;
+    .wrapper{
+        height: 100%;
+        overflow: hidden;
+    }
 `;
 
 export const List = styled.ul`

@@ -1,12 +1,12 @@
-const {
-    override,
-    fixBabelImports,
-    // addLessLoader,
-} = require("customize-cra");
+// const {
+//     override,
+//     fixBabelImports,
+//     // addLessLoader,
+// } = require("customize-cra");
 
-module.exports = override(
-    fixBabelImports("babel-plugin-import", {
-        libraryName: "antd-mobile",
-        style: "css"
-    })
-);
+// module.exports = override(
+//     fixBabelImports("babel-plugin-import", {
+//         libraryName: "antd-mobile",
+//         style: "css"
+//     })
+// );

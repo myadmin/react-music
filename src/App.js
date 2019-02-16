@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter, Switch, Redirect, Route } from 'react-router-dom';
+import { BrowserRouter, Redirect } from 'react-router-dom';
+import CacheRoute, { CacheSwitch } from 'react-router-cache-route';
 import Header from './components/Header';
 import Detail from './components/Detail';
 
@@ -8,23 +9,23 @@ class App extends Component {
     render () {
         return (
             <BrowserRouter>
-                <Switch>
+                <CacheSwitch>
                     {/*占位*/}
                     <Fragment>
                         <Header />
-                        <Route path="/" exact render={() => <Redirect to="/recommend" />}/>
+                        <CacheRoute path="/" exact render={() => <Redirect to="/recommend" />}/>
                         {
                             this.props.navList.map(v => {
-                                return <Route
+                                return <CacheRoute
                                     key={v.get('path')}
                                     path={'/' + v.get('path')}
                                     exact
                                     component={v.get('component')}/>
                             })
                         }
-                        <Route path="/recommend/:id" exact component={Detail} />
+                        <CacheRoute path="/recommend/:id" exact component={Detail} />
                     </Fragment>
-                </Switch>
+                </CacheSwitch>
             </BrowserRouter>
         )
     }

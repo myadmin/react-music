@@ -18,7 +18,7 @@ export const getList = () => {
     return (dispatch) => {
         dispatch(getListStart());
 
-        let url = `https://api.pushemail.xyz/top/playlist/highquality?limit=20`;
+        let url = `https://api.pushemail.xyz/personalized`;
         axios.get(url)
             .then(res => {
                 if (res.status === 200) {

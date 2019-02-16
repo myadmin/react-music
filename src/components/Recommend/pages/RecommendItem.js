@@ -1,20 +1,22 @@
-import React, { PureComponent, Fragment } from 'react';
-import BScroll from 'better-scroll';
+import React, { PureComponent } from 'react';
+import { SimpleImg, initSimpleImg } from 'react-simple-img';
+import Scroll from '../../../base/scroll';
+
 import { RecommendItemWrap, List, Item, Icon, Text } from '../style';
 
 class RecommendItem extends PureComponent {
     render () {
         const { data } = this.props;
         return (
-            <Fragment>
-                <RecommendItemWrap className="wrapper">
+            <RecommendItemWrap>
+                <Scroll className="wrapper" recommend={data}>
                     <List className="content">
                         {
                             data.map(v => {
                                 return (
                                     <Item key={v.name} onClick={() => this.props.detail(v.id)}>
                                         <Icon>
-                                            <img src={v.coverImgUrl} alt={v.name}/>
+                                            <SimpleImg height={60} src={v.picUrl} />
                                         </Icon>
                                         <Text>
                                             <h2>{v.name}</h2>
@@ -25,20 +27,13 @@ class RecommendItem extends PureComponent {
                             })
                         }
                     </List>
-                </RecommendItemWrap>
-            </Fragment>
+                </Scroll>                
+            </RecommendItemWrap>
         )
     }
 
     componentDidMount () {
-        // console.log(this.props.data);
-        if (this.props.data.length)
-        {
-            const wrapper = document.querySelector('.wrapper');
-            new BScroll(wrapper, {
-                click: true
-            });
-        }
+        initSimpleImg();
     }
 }
 
