@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-// import BScroll from 'better-scroll';
+import Scroll from '../../base/scroll/index';
 import { actionCreators } from './store';
 import {
     DetailWrap,
@@ -45,24 +45,26 @@ class Detail extends PureComponent {
                     <Filter />
                 </DetailBanner>
                 <DetailLayer className="wrapper-layer">
-                    <ItemWrap className="content">
-                        {
-                            data.tracks.map(v => {
-                                return (
-                                    <Item key={v.id}>
-                                        <div className="item">
-                                            <Title>
-                                                {v.name}
-                                            </Title>
-                                            <Desc>
-                                                {v.ar[0].name}
-                                            </Desc>
-                                        </div>
-                                    </Item>
-                                )
-                            })
-                        }
-                    </ItemWrap>
+                    <Scroll list={data.tracks}>
+                        <ItemWrap className="content">
+                            {
+                                data.tracks.map(v => {
+                                    return (
+                                        <Item key={v.id}>
+                                            <div className="item">
+                                                <Title>
+                                                    {v.name}
+                                                </Title>
+                                                <Desc>
+                                                    {v.ar[0].name}
+                                                </Desc>
+                                            </div>
+                                        </Item>
+                                    )
+                                })
+                            }
+                        </ItemWrap>
+                    </Scroll>
                 </DetailLayer>
             </Fragment>
 

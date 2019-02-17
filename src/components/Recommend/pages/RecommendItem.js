@@ -9,7 +9,7 @@ class RecommendItem extends PureComponent {
         const { data } = this.props;
         return (
             <RecommendItemWrap>
-                <Scroll className="wrapper" recommend={data}>
+                <Scroll className="wrapper" list={data}>
                     <List className="content">
                         {
                             data.map(v => {

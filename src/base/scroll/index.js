@@ -19,7 +19,7 @@ export default class Scroll extends PureComponent {
 
     render () {
         return (
-            <div ref="wrapper" className="wrapper">
+            <div ref="wrapper" className="wrapper" style={{height: '100%'}}>
                 {this.props.children}
             </div>
         )
@@ -30,7 +30,7 @@ export default class Scroll extends PureComponent {
             this._initScroll();
         }, 20);
 
-        if (this.props.recommend.length) {
+        if (this.props.list.length) {
             this.refresh();
         }
     }
@@ -56,5 +56,13 @@ export default class Scroll extends PureComponent {
 
     refresh () {
         this.scroll && this.scroll.refresh();
+    }
+
+    scrollTo () {
+        this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments);
+    }
+
+    scrollToElement () {
+        this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments);
     }
 }
