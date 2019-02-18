@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { BrowserRouter, Redirect } from 'react-router-dom';
 import CacheRoute, { CacheSwitch } from 'react-router-cache-route';
 import Header from './components/Header';
-import Detail from './components/Detail';
+// import Detail from './components/Detail';
 
 class App extends Component {
     render () {
@@ -19,11 +19,11 @@ class App extends Component {
                                 return <CacheRoute
                                     key={v.get('path')}
                                     path={'/' + v.get('path')}
-                                    exact
                                     component={v.get('component')}/>
                             })
                         }
-                        <CacheRoute path="/recommend/:id" exact component={Detail} />
+                        {/* 推荐详情页 */}
+                        {/* <CacheRoute path="/recommend/:id" exact component={Detail} /> */}
                     </Fragment>
                 </CacheSwitch>
             </BrowserRouter>

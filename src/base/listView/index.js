@@ -45,7 +45,7 @@ export default class ListView extends PureComponent {
                                             {
                                                 v.items.map(items => {
                                                     return (
-                                                        <li key={items.name} className="list-group-item">
+                                                        <li onClick={() => this.props.detail(items.id)} key={items.name} className="list-group-item">
                                                             <SimpleImg className="avatar" height={50} src={items.avatar}/>
                                                             <span className="name">{items.name}</span>
                                                         </li>
@@ -154,6 +154,10 @@ export default class ListView extends PureComponent {
         let delta = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0;
         let anchorIndex = parseInt(this.touch.anchorIndex, 10) + delta;
         this._scrollTo(anchorIndex);
+    }
+
+    onClickSelectItem (item) {
+        this.props.onClickSelectItem(item);
     }
 
     onScroll (pos) {
