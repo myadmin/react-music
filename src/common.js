@@ -32,6 +32,7 @@ export const Globalstyle = createGlobalStyle`
         -webkit-tap-highlight-color: transparent;
         background: #222;
         color: #fff;
+        touch-action: none;
     }
     ol, ul {
         list-style: none;

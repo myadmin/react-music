@@ -2,21 +2,6 @@ import React, { PureComponent } from 'react';
 import BScroll from 'better-scroll';
 
 export default class Scroll extends PureComponent {
-    constructor (props) {
-        super(props)
-
-        this.state = {
-            probeType: {
-                type: Number,
-                default: 1
-            },
-            click: {
-                type: Boolean,
-                default: true
-            }
-        }
-    }
-
     render () {
         return (
             <div ref="wrapper" className="wrapper" style={{height: '100%'}}>
@@ -41,9 +26,15 @@ export default class Scroll extends PureComponent {
         }
 
         this.scroll = new BScroll(this.refs.wrapper, {
-            probeType: this.state.probeType,
-            click: this.state.click
+            probeType: 3,
+            click: true
         });
+
+        if (this.props.listenScroll) {
+            this.scroll.on('scroll', (pos) => {
+                this.props.scroll(pos);
+            });
+        }
     }
 
     enable () {

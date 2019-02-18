@@ -11,8 +11,8 @@ class Singer extends Component {
         return (
             <SingerWrap>
                 {
-                    type === 0 ? <Loading /> :
-                    type === 1 ? <ListView listviewData={singerList}/>:
+                    type === 0 ?  <div className="loading-container"><Loading/></div> :
+                    type === 1 ? <ListView listviewData={singerList}/> :
                     type === 2 ? 'failed' : null
                 }
             </SingerWrap>

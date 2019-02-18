@@ -56,6 +56,17 @@ export const ListViewWrap = styled.div`
         }
     }
     .list-fixed{
-
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        .fixed-title{
+            height: 30px;
+            line-height: 30px;
+            padding-left: 20px;
+            font-size: 12px;
+            color: hsla(0,0%,100%,.5);
+            background: #333;
+        }
     }
 `;
