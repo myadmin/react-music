@@ -2,16 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CacheRoute from 'react-router-cache-route';
-// import { CSSTransition, TransitionGroup, Transition } from 'react-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { SingerWrap } from './style';
 import { actionCreators } from './store';
 import Loading from '../../base/loading'
 import ListView from '../../base/listView';
 import SingerDetail from '../../components/SingerDetail';
+import 'animate.css/animate.min.css';
 
 class Singer extends Component {
     render() {
-        const { singerList, type } = this.props;
+        const { singerList, type, location } = this.props;
+
         return (
             <SingerWrap>
                 {
@@ -20,7 +22,22 @@ class Singer extends Component {
                             type === 2 ? 'failed' : null
                 }
                 {/* 歌手详情页 */}
-                <CacheRoute className="singer-detail" path="/singer/:id" exact component={SingerDetail} />
+                <TransitionGroup>
+                    <CSSTransition 
+                        key={location.key}
+                        timeout={500}
+                        in={this.props.location.pathname !== '/singer/'}
+                        classNames={{
+                            enter: 'animated faster',
+                            enterActive: 'slideInRight',
+                            exit: 'animated faster',
+                            exitActive: 'slideInRight'
+                        }}
+                        mountOnEnter={true}
+                        unmountOnExit={true}>
+                        <CacheRoute when="back" className="singer-detail" path="/singer/:id" exact component={SingerDetail}/>
+                    </CSSTransition>
+                </TransitionGroup>
             </SingerWrap>
         )
     }

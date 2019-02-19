@@ -22,27 +22,3 @@ export const SingerWrap = styled.div`
         transition: all .3s;
     }
 `;
-
-/**
- .slide-enter-active, .slide-leave-active{
-        transition: all .3s;
-    }
-    .slide-enter, .slide-leave-to{
-        transform: translate3d(100%, 0, 0);
-    }
-
-
-.slide-enter {
-        transform: translate3d(100%, 0, 0);
-    }
-    
-    .slide-enter-active {
-        transition: all .3s;
-    }
-    .slide-exit {
-        transform: translate3d(100%, 0, 0);
-    }
-    .slide-exit-active {
-        transition: all .3s;
-    }     
- *  */
