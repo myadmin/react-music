@@ -4,6 +4,7 @@ import { BrowserRouter, Redirect } from 'react-router-dom';
 import CacheRoute, { CacheSwitch } from 'react-router-cache-route';
 import Header from './components/Header';
 // import Detail from './components/Detail';
+// import SingerDetail from './components/SingerDetail/index';
 
 class App extends Component {
     render () {
@@ -23,7 +24,7 @@ class App extends Component {
                             })
                         }
                         {/* 推荐详情页 */}
-                        {/* <CacheRoute path="/recommend/:id" exact component={Detail} /> */}
+                        {/* <CacheRoute path="/singer/:id" exact component={SingerDetail} /> */}
                     </Fragment>
                 </CacheSwitch>
             </BrowserRouter>
@@ -34,7 +35,6 @@ class App extends Component {
 const mapStateToProps = (state) => {
     return {
         navList: state.getIn(['header', 'navList']),
-        current: state.getIn(['header', 'current']),
     }
 };
 

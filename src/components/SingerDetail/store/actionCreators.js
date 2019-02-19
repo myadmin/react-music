@@ -14,6 +14,12 @@ export const getDetailFailed = () => ({
     type: actionTypes.GET_FAILED,
 });
 
+export const saveSingerDetail = (item) => ({
+    type: actionTypes.SAVE_DETAIL,
+    item
+});
+
+
 export const getSingerDetail = (id) => {
     return (dispatch) => {
         dispatch(getDetailStart());

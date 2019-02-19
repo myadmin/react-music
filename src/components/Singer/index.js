@@ -5,6 +5,7 @@ import CacheRoute from 'react-router-cache-route';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { SingerWrap } from './style';
 import { actionCreators } from './store';
+import { actionCreators as detailActionCreators } from '../SingerDetail/store';
 import Loading from '../../base/loading'
 import ListView from '../../base/listView';
 import SingerDetail from '../../components/SingerDetail';
@@ -35,7 +36,7 @@ class Singer extends Component {
                         }}
                         mountOnEnter={true}
                         unmountOnExit={true}>
-                        <CacheRoute when="back" className="singer-detail" path="/singer/:id" exact component={SingerDetail}/>
+                        <CacheRoute className="singer-detail" path="/singer/:id" component={SingerDetail}/>
                     </CSSTransition>
                 </TransitionGroup>
             </SingerWrap>
@@ -59,8 +60,9 @@ const mapDispatchToProps = (dispatch) => {
         getSingerList() {
             dispatch(actionCreators.getSingerList())
         },
-        detail(id) {
-            this.props.history.push(`/singer/${id}`);
+        detail(item) {
+            this.props.history.push(`/singer/${item.id}`);
+            dispatch(detailActionCreators.saveSingerDetail(item));
         }
     }
 }

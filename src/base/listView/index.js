@@ -45,7 +45,7 @@ export default class ListView extends PureComponent {
                                             {
                                                 v.items.map(items => {
                                                     return (
-                                                        <li onClick={() => this.props.detail(items.id)} key={items.name} className="list-group-item">
+                                                        <li onClick={() => this.props.detail(items)} key={items.name} className="list-group-item">
                                                             <SimpleImg className="avatar" height={50} src={items.avatar}/>
                                                             <span className="name">{items.name}</span>
                                                         </li>
