@@ -8,4 +8,42 @@ export const SingerDetailWrap = styled.div`
     left: 0;
     background: #000;
     z-index: 100;
+
+    &.slider {
+        background-color: #90caf9;
+    }
+    
+    &.slider-enter {
+        animation: slideInRight 0.2s forwards;
+    }
+    
+    &.slider-exit {
+        animation: slideOutRight 0.2s forwards;
+    }
+    
+    @keyframes slideInRight {
+        from {
+            transform: translate3d(100%, 0, 0);
+            visibility: visible;
+        }
+    
+        to {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+        }
+    
+        to {
+            visibility: hidden;
+            -webkit-transform: translate3d(100%, 0, 0);
+            transform: translate3d(100%, 0, 0);
+        }
+    }
+    
 `;
+
