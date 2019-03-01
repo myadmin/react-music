@@ -11,6 +11,7 @@ export default class ListView extends PureComponent {
         super(props);
 
         this.touch = {};
+        this.probeType = 3;
         this.listenScroll = true;
         this.listHeight = [];
 
@@ -33,6 +34,7 @@ export default class ListView extends PureComponent {
                     ref="listview" 
                     className="listview" 
                     list={listviewData} 
+                    probeType={this.probeType}
                     listenScroll={this.listenScroll}
                     scroll={this.onScroll}>
                     <ul>

@@ -14,11 +14,11 @@ export const SingerDetailWrap = styled.div`
     }
     
     &.slider-enter {
-        animation: slideInRight 0.2s forwards;
+        animation: slideInRight 0.3s forwards;
     }
     
     &.slider-exit {
-        animation: slideOutRight 0.2s forwards;
+        animation: slideOutRight 0.3s forwards;
     }
     
     @keyframes slideInRight {

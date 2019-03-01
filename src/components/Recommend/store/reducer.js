@@ -14,7 +14,7 @@ export default (state = defaultState, action) => {
 
     if (action.type === actionTypes.GET_SUCCESS) {
         return state.merge({
-            list: action.data.result,
+            list: action.data,
             type: 1
         });
     }

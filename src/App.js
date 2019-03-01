@@ -13,7 +13,7 @@ class App extends Component {
                 <CacheSwitch>
                     {/*占位*/}
                     <Fragment>
-                        <Header />
+                        <Header/>
                         <CacheRoute path="/" exact render={() => <Redirect to="/recommend" />}/>
                         {
                             this.props.navList.map(v => {

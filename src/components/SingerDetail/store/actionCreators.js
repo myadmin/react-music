@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as actionTypes from './actionTypes';
+import { createSong } from '../../../common/song';
 
 export const getDetailStart = () => ({
     type: actionTypes.GET_START
@@ -29,11 +30,21 @@ export const getSingerDetail = (id) => {
             .then(res => {
                 if (res.status === 200) {
                     // console.log(res.data);
-                    // console.log(res.data.list.artists)
-                    dispatch(getDetailSuccess(res.data));
+                    let songs = _normalizeSongs(res.data.hotSongs);
+                    dispatch(getDetailSuccess(songs));
                 }
             }, () => {
                 dispatch(getDetailFailed());
             });
     }
 };
+
+function _normalizeSongs (list) {
+    let ret = [];
+    list.forEach(item => {
+        if (item.id && item.al.pic_str) {
+            ret.push(createSong(item));
+        }
+    });
+    return ret;
+}

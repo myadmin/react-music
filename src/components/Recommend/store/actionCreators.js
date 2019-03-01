@@ -22,10 +22,18 @@ export const getList = () => {
         axios.get(url)
             .then(res => {
                 if (res.status === 200) {
-                    dispatch(getListSuccess(res.data));
+                    dispatch(getListSuccess(replaceImage(res.data.result)));
                 }
             }, () => {
                 dispatch(getListFailed());
             });
     }
 };
+
+function replaceImage (arrImages) {
+    arrImages.forEach(element => {
+        return element.picUrl = element.picUrl.replace(/^http/, 'https');
+    });
+
+    return arrImages;
+}

@@ -2,8 +2,7 @@ import { fromJS } from 'immutable';
 import * as actionTypes from './actionTypes';
 
 const defaultState = fromJS({
-    hotSongs: [],
-    artist: {},
+    songs: [],
     type: -1,
     detail: {}
 });
@@ -15,8 +14,7 @@ export default (state = defaultState, action) => {
 
     if (action.type === actionTypes.GET_SUCCESS) {
         return state.merge({
-            hotSongs: action.data.hotSongs,
-            artist: action.data.artist,
+            songs: action.data,
             type: 1
         });
     }

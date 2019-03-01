@@ -6,6 +6,10 @@ export const ListViewWrap = styled.div`
     height: 100%;
     overflow: hidden;
     background: #222;
+    .wrapper{
+        height: 100%;
+        overflow: hidden;
+    }
     .list-group{
         padding-bottom: 30px;
         touch-action: none;
