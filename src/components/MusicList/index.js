@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import { MusicListWrap, BackWrap, Title, BgImage, PlayWrapper, Filter } from './style';
 import Loading from '../../base/loading';
 import SongList from '../../base/songList';
 import Scroll from '../../base/scroll';
 import { profixStyle } from '../../common/dom';
+import { actionCreators } from '../Player/store';
 
 const RESERVED_HEIGHT = 40;
 const transform = profixStyle('transform');
@@ -21,6 +23,7 @@ class MusicList extends PureComponent {
         };
 
         this.onScroll = this.onScroll.bind(this);
+        this.selectItem = this.selectItem.bind(this);
     }
 
     render() {
@@ -45,7 +48,6 @@ class MusicList extends PureComponent {
                     <Filter ref="filter" />
                 </BgImage>
                 <div className="bg-layer" ref="layer" />
-                <div className="loading-container"><Loading /></div>
                 {
                     type === 0 ? <div className="loading-container"><Loading /></div> :
                         type === 1 ?
@@ -56,7 +58,7 @@ class MusicList extends PureComponent {
                                 ref="list"
                                 list={songs}>
                                 <div className="song-list-wrapper">
-                                    <SongList songs={songs} />
+                                    <SongList selectItem={this.selectItem} songs={songs} />
                                 </div>
                             </Scroll> :
                             type === 2 ? 'failed' : null
@@ -102,6 +104,18 @@ class MusicList extends PureComponent {
         this.refs.bgImage.style[transform] = `scale(${scale})`;
         this.refs.bgImage.style.zIndex = zIndex;
     }
+
+    selectItem (item, index) {
+        this.props.selectPlay(item, index);
+    }
 }
 
-export default MusicList;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        selectPlay: function(item, index) {
+            dispatch(actionCreators.selectPlay(this.musicData.songs, index))
+        }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(MusicList);

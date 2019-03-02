@@ -9,9 +9,9 @@ class SongList extends PureComponent {
             <SongListWrap>
                 <ul>
                     {
-                        songs.map(v => {
+                        songs.map((v, index) => {
                             return (
-                                <li key={v.id} className="item">
+                                <li onClick={this.selectItem.bind(this, v, index)} key={v.id} className="item">
                                     <div className="content">
                                         <h2 className="name">{v.name}</h2>
                                         <p className="desc">{v.singer}·{v.album}</p>
@@ -23,6 +23,10 @@ class SongList extends PureComponent {
                 </ul>
             </SongListWrap>
         )
+    }
+
+    selectItem (item, index) {
+        this.props.selectItem(item, index);
     }
 }
 
