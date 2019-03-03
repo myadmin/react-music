@@ -8,27 +8,27 @@ import Player from './components/Player';
 // import SingerDetail from './components/SingerDetail/index';
 
 class App extends Component {
-    render () {
+    render() {
         return (
             <BrowserRouter>
-                <CacheSwitch>
-                    {/*占位*/}
-                    <Fragment>
-                        <Header/>
-                        <CacheRoute path="/" exact render={() => <Redirect to="/recommend" />}/>
+                {/*占位*/}
+                <Fragment>
+                    <Header />
+                    <CacheSwitch>
+                        <CacheRoute path="/" exact render={() => <Redirect to="/recommend" />} />
                         {
                             this.props.navList.map(v => {
                                 return <CacheRoute
                                     key={v.get('path')}
                                     path={'/' + v.get('path')}
-                                    component={v.get('component')}/>
+                                    component={v.get('component')} />
                             })
                         }
                         {/* 推荐详情页 */}
                         {/* <CacheRoute path="/singer/:id" exact component={SingerDetail} /> */}
-                        <Player />
-                    </Fragment>
-                </CacheSwitch>
+                    </CacheSwitch>
+                    <Player />
+                </Fragment>
             </BrowserRouter>
         )
     }

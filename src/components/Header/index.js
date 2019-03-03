@@ -2,10 +2,10 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { HeaderWrap, Icon, Title, NavWrap, NavItem } from './style';
-import { actionCreators }  from './store';
+import { actionCreators } from './store';
 
 class Header extends Component {
-    render () {
+    render() {
         const { navList, current } = this.props;
         return (
             <Fragment>
@@ -28,7 +28,7 @@ class Header extends Component {
         )
     }
 
-    componentDidMount () {
+    componentDidMount() {
         this.props.init_tab();
     }
 }
@@ -46,7 +46,7 @@ const mapDispatchToProps = (dispatch) => {
             this.history.push(`/${value}`);
             dispatch(actionCreators.changeTab(value));
         },
-        init_tab () {
+        init_tab() {
             let value = this.location.pathname.slice(1);
             dispatch(actionCreators.changeTab(value));
         }

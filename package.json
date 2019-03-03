@@ -8,6 +8,7 @@
     "axios": "^0.18.0",
     "better-scroll": "^1.13.4",
     "fastclick": "^1.0.6",
+    "history": "^4.7.2",
     "immutable": "^4.0.0-rc.12",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",

@@ -35,9 +35,9 @@ export const currentIndex = currentIndex => ({
     currentIndex
 });
 
-export const currentSong = (list, currentIndex) => ({
+export const currentSong = currentSong => ({
     type: actionTypes.SET_CURRENT_SONG,
-    currentSong: list[currentIndex] || {}
+    currentSong: currentSong || {}
 });
 
 export const settingPlay = (list, index, iTag) => ({
@@ -59,5 +59,14 @@ export const selectPlay = (list, index) => {
         // dispatch(fullScreen(true));
         // dispatch(playing(true));
         // dispatch(currentSong(list, index));
+    }
+}
+
+export const setCurrentSong = index => {
+    return (dispatch, getState) => {
+        let state = getState();
+        let list = state.getIn(['player', 'playlist'])
+        dispatch(currentIndex(index));
+        dispatch(currentSong(list.get(index)));
     }
 }

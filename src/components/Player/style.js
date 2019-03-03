@@ -1,35 +1,13 @@
 import styled from 'styled-components';
 
 export const PlayerWrap = styled.div`
-
-    .normal-enter {
-        opacity: 0;
-        .top{
-            transform: translateY(-100px);
+    
+    @keyframes rotate{
+        0%{
+            transform: rotate(0);
         }
-        .bottom{
-            transform: translateY(100px);
-        }
-    }
-    .normal-enter-active {
-        transition: all 0.4s;
-        .top, .bottom{
-            transition: all .4s cubic-bezier(.86, .18, .82, 1.32);
-        }
-    }
-    .normal-exit {
-        opacity: 0;
-        .top{
-            transform: translateY(-100px);
-        }
-        .bottom{
-            transform: translateY(100px);
-        }
-    }
-    .normal-exit-active {
-        transition: all 0.4s;
-        .top, .bottom{
-            transition: all .4s cubic-bezier(.86, .18, .82, 1.32);
+        100%{
+            transform: rotate(360deg);
         }
     }
 `;
@@ -111,7 +89,15 @@ export const NormalPlayer = styled.div`
                 .cd{
                     width: 100%;
                     height: 100%;
+                    box-sizing: border-box;
+                    border: 10px solid rgba(255, 255, 255, .1);
                     border-radius: 50%;
+                    &.play{
+                        animation: rotate 20s linear infinite;
+                    }
+                    &.pause{
+                        animation-play-state: paused;
+                    }
                     .image{
                         position: absolute;
                         left: 0;
@@ -170,6 +156,9 @@ export const NormalPlayer = styled.div`
                 i{
                     font-size: 30px;
                 }
+                &.disable{
+                    color: rgba(255,205,49,0.5);
+                }
             }
             .i-left{
                 text-align: right;
@@ -208,6 +197,12 @@ export const MiniPlayer = styled.div`
             width: 100%;
             img{
                 border-radius: 50%;
+                &.play{
+                    animation: rotate 20s linear infinite;
+                }
+                &.pause{
+                    animation-play-state: paused;
+                }
             }
         }
     }
@@ -247,7 +242,7 @@ export const MiniPlayer = styled.div`
             left: 0;
             top: 0;
         }
-        .icon-play-mini{
+        .icon-play-mini, .icon-pause-mini{
             font-size: 30px;
             color: rgba(255,205,49,.5);
         }
