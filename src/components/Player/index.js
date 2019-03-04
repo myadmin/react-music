@@ -3,13 +3,15 @@ import { connect } from 'react-redux';
 // import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { actionCreators } from './store';
 import { PlayerWrap, NormalPlayer, MiniPlayer } from './style';
+import ProgressBar from '../../base/progressBar';
 
 class Player extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            songReady: false
+            songReady: false,
+            currentTime: 0
         };
 
         this.onBack = this.onBack.bind(this);
@@ -19,6 +21,8 @@ class Player extends Component {
         this.onNext = this.onNext.bind(this);
         this.onAudioReady = this.onAudioReady.bind(this);
         this.onAudioError = this.onAudioError.bind(this);
+        this.onAudioTimeUpdate = this.onAudioTimeUpdate.bind(this);
+        this.onProgressBarChange = this.onProgressBarChange.bind(this);
     }
 
     render() {
@@ -47,6 +51,13 @@ class Player extends Component {
                         </div>
                     </div>
                     <div className="bottom">
+                        <div className="progress-wrapper">
+                            <span className="time time-l">{this.format(this.state.currentTime)}</span>
+                            <div className="progress-bar-wrapper">
+                                <ProgressBar percent={this._precent(currentSong)} percentChange={this.onProgressBarChange} />
+                            </div>
+                            <span className="time time-r">{this.format(currentSong.duration)}</span>
+                        </div>
                         <div className="operators">
                             <div className="icon i-left">
                                 <i className="icon-sequence"></i>
@@ -83,7 +94,12 @@ class Player extends Component {
                         <i className="icon-playlist"></i>
                     </div>
                 </MiniPlayer>
-                <audio onCanPlay={this.onAudioReady} onError={this.onAudioError} ref="audio" src={currentSong.url}></audio>
+                <audio
+                    onCanPlay={this.onAudioReady}
+                    onError={this.onAudioError}
+                    onTimeUpdate={this.onAudioTimeUpdate}
+                    ref="audio"
+                    src={currentSong.url}></audio>
             </PlayerWrap>
         )
     }
@@ -105,9 +121,7 @@ class Player extends Component {
 
     onTogglePlaying(event) {
         event.stopPropagation();
-        if (!this.state.songReady) return;
-        let playingState = this.props.playing;
-        this.props.setPlayingState(!playingState);
+        this._togglePlaying();
     }
 
     onPrev(event) {
@@ -145,6 +159,19 @@ class Player extends Component {
         });
     }
 
+    // 当播放进度条被拖动发送改变时修改当前播放时间
+    onProgressBarChange(percent) {
+        let currentTime = this.props.currentSong.duration * percent;
+        this.refs.audio.currentTime = currentTime;
+        this.setState({
+            currentTime: currentTime
+        })
+
+        if (!this.props.playing) {
+            this._togglePlaying();
+        }
+    }
+
     // 当歌曲加载完成后才执行
     onAudioReady() {
         this.setState({
@@ -157,6 +184,41 @@ class Player extends Component {
         this.setState({
             songReady: true
         });
+    }
+
+    // 获取当前歌曲更新时间
+    onAudioTimeUpdate(e) {
+        this.setState({
+            currentTime: e.target.currentTime
+        });
+    }
+
+    _togglePlaying() {
+        if (!this.state.songReady) return;
+        let playingState = this.props.playing;
+        this.props.setPlayingState(!playingState);
+    }
+
+    // 格式化时间
+    format(interval) {
+        interval = interval | 0;
+        const minute = interval / 60 | 0;
+        const second = this._pad(interval % 60);
+        return `${minute}:${second}`;
+    }
+
+    // 补零
+    _pad(num, n = 2) {
+        let len = num.toString().length;
+        while (len < n) {
+            num = '0' + num;
+            len++;
+        }
+        return num;
+    }
+
+    _precent(currentSong) {
+        return this.state.currentTime / currentSong.duration;
     }
 }
 

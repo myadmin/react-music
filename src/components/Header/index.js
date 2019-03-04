@@ -7,6 +7,7 @@ import { actionCreators } from './store';
 class Header extends Component {
     render() {
         const { navList, current } = this.props;
+
         return (
             <Fragment>
                 <HeaderWrap>

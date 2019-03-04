@@ -4,12 +4,12 @@ import { MusicListWrap, BackWrap, Title, BgImage, PlayWrapper, Filter } from './
 import Loading from '../../base/loading';
 import SongList from '../../base/songList';
 import Scroll from '../../base/scroll';
-import { profixStyle } from '../../common/dom';
+import { prefixStyle } from '../../common/dom';
 import { actionCreators } from '../Player/store';
 
 const RESERVED_HEIGHT = 40;
-const transform = profixStyle('transform');
-const backdrop = profixStyle('backdrop-filter');
+const transform = prefixStyle('transform');
+const backdrop = prefixStyle('backdrop-filter');
 
 class MusicList extends PureComponent {
     constructor(props) {

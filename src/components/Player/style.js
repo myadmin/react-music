@@ -145,7 +145,27 @@ export const NormalPlayer = styled.div`
 
         }
         .progress-wrapper{
-
+            display: flex;
+            align-items: center;
+            width: 80%;
+            margin: 0 auto;
+            padding: 10px 0;
+            .time{
+                color: #fff;
+                font-size: 12px;
+                flex: 0 0 30px;
+                line-height: 30px;
+                width: 30px;
+                &.time-l{
+                    text-align: left;
+                }
+                &.time-r{
+                    text-align: right;
+                }
+            }
+            .progress-bar-wrapper{
+                flex: 1;
+            }
         }
         .operators{
             display: flex;

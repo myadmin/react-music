@@ -28,7 +28,7 @@ let vendor = (() => {
     return false;
 })();
 
-export function profixStyle (style) {
+export function prefixStyle (style) {
     if (vendor === false) {
         return false;
     }

@@ -17,6 +17,9 @@ const defaultState = fromJS({
 
 export default (state = defaultState, action) => {
     if (action.type === actionTypes.CHANGE_TAB) {
+        if (action.value === '') {
+            action.value = 'recommend';
+        }
         return state.set('current', action.value);
     }
 
