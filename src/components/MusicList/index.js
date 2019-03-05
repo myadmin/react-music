@@ -24,6 +24,7 @@ class MusicList extends PureComponent {
 
         this.onScroll = this.onScroll.bind(this);
         this.selectItem = this.selectItem.bind(this);
+        this.onClickRandom = this.onClickRandom.bind(this);
     }
 
     render() {
@@ -39,7 +40,7 @@ class MusicList extends PureComponent {
                     <PlayWrapper>
                         {
                             songs.length > 0 ?
-                                <div className="play" ref="playBtn">
+                                <div className="play" ref="playBtn" onClick={this.onClickRandom}>
                                     <i className="icon-play"></i>
                                     <span className="text">随机播放全部</span>
                                 </div> : null
@@ -105,15 +106,22 @@ class MusicList extends PureComponent {
         this.refs.bgImage.style.zIndex = zIndex;
     }
 
-    selectItem (item, index) {
+    selectItem(item, index) {
         this.props.selectPlay(item, index);
+    }
+
+    onClickRandom() {
+        this.props.randomPlay(this.props.musicData.songs);
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        selectPlay: function(item, index) {
+        selectPlay: function (item, index) {
             dispatch(actionCreators.selectPlay(this.musicData.songs, index))
+        },
+        randomPlay: function (list) {
+            dispatch(actionCreators.randomPlay(list));
         }
     }
 }

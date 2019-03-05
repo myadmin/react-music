@@ -33,9 +33,15 @@ export default (state = defaultState, action) => {
         case actionTypes.SET_FULL_SCREEN:
             return state.set('fullScreen', action.fullScreen);
         case actionTypes.SET_PLAYLIST:
-            return state.update('playlist', list => list.concat(action.playlist));
+            let playlist = state.get('playlist').clear();
+            return state.merge({
+                playlist: playlist.concat(action.playlist)
+            });
         case actionTypes.SET_SEQUENCE_LIST:
-            return state.update('sequenceList', list => list.concat(action.sequenceList));
+            let sequenceList = state.get('sequenceList').clear();
+            return state.merge({
+                sequenceList: sequenceList.concat(action.sequenceList)
+            });
         case actionTypes.SET_PLAY_MODE:
             return state.set('mode', action.mode);
         case actionTypes.SET_CURRENT_INDEX:

@@ -257,7 +257,7 @@ export const MiniPlayer = styled.div`
             position: relative;
         }
         .icon-mini{
-            font-size: 32px;
+            font-size: 32px !important;
             position: absolute;
             left: 0;
             top: 0;

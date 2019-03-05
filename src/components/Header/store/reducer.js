@@ -17,8 +17,12 @@ const defaultState = fromJS({
 
 export default (state = defaultState, action) => {
     if (action.type === actionTypes.CHANGE_TAB) {
+        // console.log(action.value)
         if (action.value === '') {
             action.value = 'recommend';
+        }
+        if (action.value.indexOf('singer') > -1) {
+            action.value = 'singer';
         }
         return state.set('current', action.value);
     }

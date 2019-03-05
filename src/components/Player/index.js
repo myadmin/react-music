@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import { actionCreators } from './store';
 import { PlayerWrap, NormalPlayer, MiniPlayer } from './style';
 import ProgressBar from '../../base/progressBar';
+import ProgressCircle from '../../base/progressCircle';
+import { playMode } from '../../common/config';
+import { shuffle } from '../../common/util';
 
 class Player extends Component {
     constructor(props) {
@@ -23,10 +26,18 @@ class Player extends Component {
         this.onAudioError = this.onAudioError.bind(this);
         this.onAudioTimeUpdate = this.onAudioTimeUpdate.bind(this);
         this.onProgressBarChange = this.onProgressBarChange.bind(this);
+        this.onChangeMode = this.onChangeMode.bind(this);
+        this.onAudioEnd = this.onAudioEnd.bind(this);
     }
 
     render() {
-        const { playlist, fullScreen, currentSong, playing } = this.props;
+        const { playlist, fullScreen, currentSong, playing, mode } = this.props;
+
+        const IconMode = mode === playMode.sequence ? "icon-sequence" : mode === playMode.loop ? "icon-loop" : "icon-random";
+
+        if (!playlist.size) {
+            return null;
+        }
 
         return (
             <PlayerWrap style={{ display: playlist.size ? '' : 'none' }}>
@@ -59,8 +70,8 @@ class Player extends Component {
                             <span className="time time-r">{this.format(currentSong.duration)}</span>
                         </div>
                         <div className="operators">
-                            <div className="icon i-left">
-                                <i className="icon-sequence"></i>
+                            <div className="icon i-left" onClick={this.onChangeMode}>
+                                <i className={IconMode} />
                             </div>
                             <div className={this.state.songReady ? "icon i-left" : "icon i-left disable"}>
                                 <i onClick={this.onPrev} className="icon-prev"></i>
@@ -88,7 +99,9 @@ class Player extends Component {
                         <p className="desc" dangerouslySetInnerHTML={{ __html: currentSong.singer }} />
                     </div>
                     <div className="control">
-                        <i onClick={this.onTogglePlaying} className={playing ? "icon-pause-mini" : "icon-play-mini"}></i>
+                        <ProgressCircle radius={32} percent={this._precent(currentSong)}>
+                            <i onClick={this.onTogglePlaying} className={playing ? "icon-mini icon-pause-mini" : "icon-mini icon-play-mini"}></i>
+                        </ProgressCircle>
                     </div>
                     <div className="control">
                         <i className="icon-playlist"></i>
@@ -98,39 +111,37 @@ class Player extends Component {
                     onCanPlay={this.onAudioReady}
                     onError={this.onAudioError}
                     onTimeUpdate={this.onAudioTimeUpdate}
+                    onEnded={this.onAudioEnd}
                     ref="audio"
                     src={currentSong.url}></audio>
             </PlayerWrap>
         )
     }
 
-    componentDidUpdate() {
-        if (this.props.currentSong.id) {
-            this.audio = this.refs.audio;
-            this.props.playing ? this.audio.play() : this.audio.pause();
-        }
-    }
-
+    // 收起播放器
     onBack() {
         this.props.setFullScreen(false);
     }
 
+    // 打开播放器
     onOpen() {
         this.props.setFullScreen(true);
     }
 
+    // 切换播放状态
     onTogglePlaying(event) {
         event.stopPropagation();
         this._togglePlaying();
     }
 
+    // 上一首
     onPrev(event) {
         if (!this.state.songReady) return;
         let index = this.props.currentIndex - 1;
         if (index === -1) {
             index = this.props.playlist.length - 1;
         }
-        this.props.setCurrentIndex(index);
+        this.props.setCurrentIndex(index, this.props.playlist.toJS());
 
         // 切换歌曲后，如果当前的播放状态跟之前的播放状态不一致，需要重新设置一下播放状态
         if (!this.props.playing) {
@@ -142,13 +153,14 @@ class Player extends Component {
         });
     }
 
+    // 下一首
     onNext(event) {
         if (!this.state.songReady) return;
         let index = this.props.currentIndex + 1;
         if (index === this.props.playlist.length) {
             index = 0;
         }
-        this.props.setCurrentIndex(index);
+        this.props.setCurrentIndex(index, this.props.playlist.toJS());
 
         if (!this.props.playing) {
             this.onTogglePlaying(event);
@@ -165,7 +177,7 @@ class Player extends Component {
         this.refs.audio.currentTime = currentTime;
         this.setState({
             currentTime: currentTime
-        })
+        });
 
         if (!this.props.playing) {
             this._togglePlaying();
@@ -176,6 +188,8 @@ class Player extends Component {
     onAudioReady() {
         this.setState({
             songReady: true
+        }, () => {
+            this._play();
         });
     }
 
@@ -193,9 +207,49 @@ class Player extends Component {
         });
     }
 
+    // 修改播放模式
+    onChangeMode() {
+        const mode = (this.props.mode + 1) % 3;
+        this.props.setPlayMode(mode);
+        let list = null;
+        if (mode === playMode.random) {
+            list = shuffle(this.props.sequenceList.toJS());
+        } else {
+            list = this.props.sequenceList.toJS();
+        }
+
+        this.resetCurrentIndex(list);
+        this.props.setPlayList(list);
+    }
+
+    // 当前歌曲结束后，自动播放下一首
+    onAudioEnd(event) {
+        if (this.props.mode === playMode.loop) {
+            this.onAudioLoop();
+        } else {
+            this.onNext(event);
+        }
+    }
+
+    // 循环播放
+    onAudioLoop() {
+        this.refs.audio.currentTime = 0;
+    }
+
+    // 重置当前播放的歌曲的索引
+    resetCurrentIndex(list) {
+        let index = list.findIndex(item => {
+            return item.id === this.props.currentSong.id
+        });
+        this.props.setCurrentIndex(index, list);
+    }
+
+    // 切换播放/暂停
     _togglePlaying() {
         if (!this.state.songReady) return;
         let playingState = this.props.playing;
+        this.audio = this.refs.audio;
+        !playingState ? this.audio.play() : this.audio.pause();
         this.props.setPlayingState(!playingState);
     }
 
@@ -205,6 +259,11 @@ class Player extends Component {
         const minute = interval / 60 | 0;
         const second = this._pad(interval % 60);
         return `${minute}:${second}`;
+    }
+
+    _play() {
+        this.audio = this.refs.audio;
+        this.props.playing ? this.audio.play() : this.audio.pause();
     }
 
     // 补零
@@ -229,6 +288,8 @@ const mapStateToProps = (state) => {
         currentSong: state.getIn(['player', 'currentSong']),
         playing: state.getIn(['player', 'playing']),
         currentIndex: state.getIn(['player', 'currentIndex']),
+        mode: state.getIn(['player', 'mode']),
+        sequenceList: state.getIn(['player', 'sequenceList']),
     }
 }
 
@@ -240,9 +301,14 @@ const mapDispatchToProps = (dispatch) => {
         setPlayingState: function (playingState) {
             dispatch(actionCreators.playing(playingState));
         },
-        setCurrentIndex: function (index) {
-            dispatch(actionCreators.setCurrentSong(index));
-            // dispatch(actionCreators.currentSong(this.playlist, index));
+        setCurrentIndex: function (index, list) {
+            dispatch(actionCreators.setCurrentSong(index, list)) 
+        },
+        setPlayMode: function (mode) {
+            dispatch(actionCreators.mode(mode));
+        },
+        setPlayList: function (list) {
+            dispatch(actionCreators.playlist(list));
         }
     }
 }

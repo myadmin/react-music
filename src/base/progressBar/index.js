@@ -69,7 +69,8 @@ class ProgressBar extends Component {
     onProgressClick(e) {
         e.preventDefault();
         e.stopPropagation();
-        let offsetWidth = e.clientX - this.refs.progressBar.offsetLeft;
+        const rect = this.refs.progressBar.getBoundingClientRect();
+        const offsetWidth = e.pageX - rect.left;
         this._offset(offsetWidth);
         this._triggerPercent();
     }
