@@ -9,7 +9,7 @@ export default class Scroll extends PureComponent {
     }
     render () {
         return (
-            <div ref="wrapper" className="wrapper">
+            <div ref="wrapper" className={this.props.className ? this.props.className : "wrapper"}>
                 {this.props.children}
             </div>
         )

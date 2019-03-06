@@ -1,12 +1,18 @@
 import React, { Component, /* Fragment */ } from 'react';
 import { connect } from 'react-redux';
+import Lyric from 'lyric-parser';
 // import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { actionCreators } from './store';
 import { PlayerWrap, NormalPlayer, MiniPlayer } from './style';
-import ProgressBar from '../../base/progressBar';
-import ProgressCircle from '../../base/progressCircle';
 import { playMode } from '../../common/config';
 import { shuffle } from '../../common/util';
+import { prefixStyle } from '../../common/dom';
+import ProgressBar from '../../base/progressBar';
+import ProgressCircle from '../../base/progressCircle';
+import Scroll from '../../base/scroll/index';
+
+const transform = prefixStyle('transform');
+const transitionDuration = prefixStyle('transitionDuration');
 
 class Player extends Component {
     constructor(props) {
@@ -14,8 +20,13 @@ class Player extends Component {
 
         this.state = {
             songReady: false,
-            currentTime: 0
+            currentTime: 0,
+            currentLyric: null,
+            currentLineNum: 0,
+            currentShow: 'cd',
         };
+
+        this.touch = {};
 
         this.onBack = this.onBack.bind(this);
         this.onOpen = this.onOpen.bind(this);
@@ -28,6 +39,10 @@ class Player extends Component {
         this.onProgressBarChange = this.onProgressBarChange.bind(this);
         this.onChangeMode = this.onChangeMode.bind(this);
         this.onAudioEnd = this.onAudioEnd.bind(this);
+        this.hanldeLyric = this.hanldeLyric.bind(this);
+        this.onMiddleTouchStart = this.onMiddleTouchStart.bind(this);
+        this.onMiddleTouchMove = this.onMiddleTouchMove.bind(this);
+        this.onMiddleTouchEnd = this.onMiddleTouchEnd.bind(this);
     }
 
     render() {
@@ -52,16 +67,40 @@ class Player extends Component {
                         <h1 className="title" dangerouslySetInnerHTML={{ __html: currentSong.name }} />
                         <h2 className="subtitle" dangerouslySetInnerHTML={{ __html: currentSong.singer }} />
                     </div>
-                    <div className="middle">
-                        <div className="middle-l">
+                    <div className="middle"
+                        onTouchStart={this.onMiddleTouchStart}
+                        onTouchMove={this.onMiddleTouchMove}
+                        onTouchEnd={this.onMiddleTouchEnd}>
+                        <div className="middle-l" ref="middleL">
                             <div className="cd-wrapper">
                                 <div className={playing ? "cd play" : "cd play pause"}>
                                     <img src={currentSong.image} alt={currentSong.name} className="image" />
                                 </div>
                             </div>
                         </div>
+                        {
+                            this.state.currentLyric ?
+                                <Scroll className="middle-r" ref="lyricList" list={this.state.currentLyric.lines}>
+                                    <div className="lyric-wrapper">
+                                        {
+                                            this.state.currentLyric ?
+                                                <div>
+                                                    {
+                                                        this.state.currentLyric.lines.map((line, index) => {
+                                                            return <p key={line.time} ref={"lyricLine" + index} className={this.state.currentLineNum === index ? "text current" : "text"}>{line.txt}</p>
+                                                        })
+                                                    }
+                                                </div> : null
+                                        }
+                                    </div>
+                                </Scroll> : null
+                        }
                     </div>
                     <div className="bottom">
+                        <div className="dot-wrapper">
+                            <span className={this.state.currentShow === 'cd' ? "dot active" : "dot"} />
+                            <span className={this.state.currentShow === 'lyric' ? "dot active" : "dot"} />
+                        </div>
                         <div className="progress-wrapper">
                             <span className="time time-l">{this.format(this.state.currentTime)}</span>
                             <div className="progress-bar-wrapper">
@@ -190,6 +229,7 @@ class Player extends Component {
             songReady: true
         }, () => {
             this._play();
+            this.getLyric();
         });
     }
 
@@ -236,12 +276,102 @@ class Player extends Component {
         this.refs.audio.currentTime = 0;
     }
 
+    onMiddleTouchStart(event) {
+        event.preventDefault();
+        const touch = event.touches[0];
+        this.touch.initialted = true;
+        this.touch.startX = touch.pageX;
+        this.touch.startY = touch.pageY;
+    }
+
+    onMiddleTouchMove(event) {
+        event.preventDefault();
+        if (!this.touch.initialted) {
+            return;
+        }
+        const touch = event.touches[0];
+        const deltaX = touch.pageX - this.touch.startX;
+        const deltaY = touch.pageY - this.touch.startY;
+        if (Math.abs(deltaY) > Math.abs(deltaX)) {
+            return;
+        }
+        const left = this.state.currentShow === 'cd' ? 0 : -window.innerWidth;
+        const offsetWidth = Math.min(0, Math.max(-window.innerWidth, left + deltaX));
+        this.touch.percent = Math.abs(offsetWidth / window.innerWidth);
+        this.refs.lyricList.refs.wrapper.style[transform] = `translate3d(${offsetWidth}px, 0, 0)`;
+        this.refs.lyricList.refs.wrapper.style[transitionDuration] = 0;
+        this.refs.middleL.style.opacity = 1 - this.touch.percent;
+        this.refs.middleL.style[transitionDuration] = 0;
+    }
+
+    onMiddleTouchEnd() {
+        let offsetWidth, opacity;
+        // 从右向左滑动
+        if (this.state.currentShow === 'cd') {
+            if (this.touch.percent > 0.1) {
+                offsetWidth = -window.innerWidth;
+                opacity = 0;
+                this.setState({
+                    currentShow: 'lyric'
+                });
+            } else {
+                offsetWidth = 0;
+                opacity = 1;
+            }
+        } else { // 从左向右滑动
+            if (this.touch.percent < 0.9) {
+                offsetWidth = 0;
+                this.setState({
+                    currentShow: 'cd'
+                });
+                opacity = 1;
+            } else {
+                offsetWidth = -window.innerWidth;
+                opacity = 0;
+            }
+        }
+        const time = 300;
+        this.refs.lyricList.refs.wrapper.style[transform] = `translate3d(${offsetWidth}px, 0, 0)`;
+        this.refs.lyricList.refs.wrapper.style[transitionDuration] = `${time}ms`;
+        this.refs.middleL.style.opacity = opacity;
+        this.refs.middleL.style[transitionDuration] = `${time}ms`;
+        this.touch = {};
+    }
+
     // 重置当前播放的歌曲的索引
     resetCurrentIndex(list) {
         let index = list.findIndex(item => {
             return item.id === this.props.currentSong.id
         });
         this.props.setCurrentIndex(index, list);
+    }
+
+    // 获取歌词，解析成dom
+    getLyric() {
+        this.props.currentSong.getLyric().then((lyric) => {
+            this.setState({
+                currentLyric: new Lyric(lyric, this.hanldeLyric)
+            }, () => {
+                if (this.props.playing) {
+                    this.state.currentLyric.play();
+                }
+            });
+        });
+    }
+
+    // 监听歌词的变化
+    hanldeLyric({ lineNum, txt }) {
+        this.setState({
+            currentLineNum: lineNum
+        }, () => {
+            if (lineNum > 5) {
+                let currentLine = lineNum - 5;
+                let lineEl = this.refs['lyricLine' + currentLine];
+                this.refs.lyricList.scrollToElement(lineEl, 1000);
+            } else {
+                this.refs.lyricList.scrollTo(0, 0, 1000);
+            }
+        });
     }
 
     // 切换播放/暂停
@@ -302,7 +432,7 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actionCreators.playing(playingState));
         },
         setCurrentIndex: function (index, list) {
-            dispatch(actionCreators.setCurrentSong(index, list)) 
+            dispatch(actionCreators.setCurrentSong(index, list))
         },
         setPlayMode: function (mode) {
             dispatch(actionCreators.mode(mode));

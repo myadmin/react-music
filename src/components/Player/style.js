@@ -134,6 +134,16 @@ export const NormalPlayer = styled.div`
                 margin: 0 auto;
                 overflow: hidden;
                 text-align: center
+                .text{
+                    line-height: 32px;
+                    color: hsla(0,0%,100%,.5);
+                    font-size: 14px;
+                    transition: all .2s;
+                    &.current{
+                        color: #fff;
+                        font-size: 16px;
+                    }
+                }
             }
         }
     }
@@ -142,7 +152,22 @@ export const NormalPlayer = styled.div`
         bottom: 50px;
         width: 100%;
         .dot-wrapper{
-
+            text-align: center;
+            font-size: 0;
+            .dot{
+                display: inline-block;
+                vertical-align: middle;
+                margin: 0 4px;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: hsla(0,0%,100%,.5);
+                &.active{
+                    width: 20px;
+                    border-radius: 5px;
+                    background: hsla(0,0%,100%,.8);
+                }
+            }
         }
         .progress-wrapper{
             display: flex;

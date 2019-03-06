@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export default class Song {
     constructor({ id, singer, name, album, duration, image, url }) {
         this.id = id;
@@ -8,6 +10,35 @@ export default class Song {
         this.image = image;
         this.url = url;
     }
+
+    getLyric() {
+        if (this.lyric) {
+            return Promise.resolve(this.lyric);
+        }
+
+        return new Promise((resolve, reject) => {
+            getSongLyric(this.id).then(res => {
+                if (res.status === 200) {
+                    this.lyric = res.data.lrc.lyric;
+                    resolve(this.lyric)
+                } else {
+                    reject('no lyric');
+                }
+            });
+        })
+    }
+}
+
+// 获取歌词
+function getSongLyric(id) {
+    return new Promise((resolve, reject) => {
+        axios.get(`https://api.pushemail.xyz/lyric?id=${id}`)
+        .then(res => {
+            resolve(res);
+        }, () => {
+            reject();
+        });
+    });
 }
 
 export function createSong(musicData) {

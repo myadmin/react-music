@@ -10,6 +10,7 @@
     "fastclick": "^1.0.6",
     "history": "^4.7.2",
     "immutable": "^4.0.0-rc.12",
+    "lyric-parser": "^1.0.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-lazy-image": "^1.1.0",

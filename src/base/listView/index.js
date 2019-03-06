@@ -32,7 +32,7 @@ export default class ListView extends PureComponent {
             <ListViewWrap>
                 <Scroll 
                     ref="listview" 
-                    className="listview" 
+                    className="wrapper" 
                     list={listviewData} 
                     probeType={this.probeType}
                     listenScroll={this.listenScroll}

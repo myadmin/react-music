@@ -19,6 +19,7 @@ class App extends Component {
                         {
                             this.props.navList.map(v => {
                                 return <CacheRoute
+                                    className={v.get('path')}
                                     key={v.get('path')}
                                     path={'/' + v.get('path')}
                                     component={v.get('component')} />
