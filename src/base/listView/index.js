@@ -162,6 +162,10 @@ export default class ListView extends PureComponent {
         this.props.onClickSelectItem(item);
     }
 
+    onRefresh() {
+        this.refs.listview.refresh();
+    }
+
     onScroll (pos) {
         this.setState({
             scrollY: pos.y

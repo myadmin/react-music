@@ -8,7 +8,11 @@ export const RecommendWrap = styled.div`
 `;
 
 export const RecommendItemWrap = styled.div`
-    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
     overflow: hidden;
     .wrapper{
         height: 100%;

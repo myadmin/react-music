@@ -14,11 +14,11 @@ class Singer extends Component {
         const { singerList, type, location } = this.props;
 
         return (
-            <SingerWrap>
+            <SingerWrap ref="singer">
                 {
                     type === 0 ? <div className="loading-container"><Loading /></div> :
-                        type === 1 ? <ListView detail={this.props.detail.bind(this)} listviewData={singerList} /> :
-                            type === 2 ? 'failed' : null
+                        type === 1 ? <ListView ref="list" detail={this.props.detail.bind(this)} listviewData={singerList} /> :
+                            type === 2 ? "failed" : null
                 }
                 {/* 歌手详情页 */}
                 <TransitionGroup>
@@ -38,12 +38,21 @@ class Singer extends Component {
     componentDidMount() {
         this.props.getSingerList();
     }
+
+    componentDidUpdate() {
+        if (this.props.playlist.size) {
+            const bottom = this.props.playlist.size > 0 ? '60px' : '';
+            this.refs.singer.style.bottom = bottom;
+            this.refs.list.onRefresh();
+        }
+    }
 }
 
 const mapStateToProps = (state) => {
     return {
         singerList: state.getIn(['singer', 'singerList']),
         type: state.getIn(['singer', 'type']),
+        playlist: state.getIn(['player', 'playlist'])
     }
 }
 

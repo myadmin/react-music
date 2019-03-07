@@ -24,6 +24,7 @@ class Player extends Component {
             currentLyric: null,
             currentLineNum: 0,
             currentShow: 'cd',
+            playingLyric: '',
         };
 
         this.touch = {};
@@ -33,16 +34,17 @@ class Player extends Component {
         this.onTogglePlaying = this.onTogglePlaying.bind(this);
         this.onPrev = this.onPrev.bind(this);
         this.onNext = this.onNext.bind(this);
+        this.onAudioLoadStart = this.onAudioLoadStart.bind(this);
         this.onAudioReady = this.onAudioReady.bind(this);
         this.onAudioError = this.onAudioError.bind(this);
+        this.onAudioEnd = this.onAudioEnd.bind(this);
         this.onAudioTimeUpdate = this.onAudioTimeUpdate.bind(this);
         this.onProgressBarChange = this.onProgressBarChange.bind(this);
         this.onChangeMode = this.onChangeMode.bind(this);
-        this.onAudioEnd = this.onAudioEnd.bind(this);
-        this.hanldeLyric = this.hanldeLyric.bind(this);
         this.onMiddleTouchStart = this.onMiddleTouchStart.bind(this);
         this.onMiddleTouchMove = this.onMiddleTouchMove.bind(this);
         this.onMiddleTouchEnd = this.onMiddleTouchEnd.bind(this);
+        this.hanldeLyric = this.hanldeLyric.bind(this);
     }
 
     render() {
@@ -76,6 +78,9 @@ class Player extends Component {
                                 <div className={playing ? "cd play" : "cd play pause"}>
                                     <img src={currentSong.image} alt={currentSong.name} className="image" />
                                 </div>
+                            </div>
+                            <div className="playing-lyric-wrapper">
+                                <div className="playing-lyric">{this.state.playingLyric}</div>
                             </div>
                         </div>
                         {
@@ -147,6 +152,7 @@ class Player extends Component {
                     </div>
                 </MiniPlayer>
                 <audio
+                    onLoadStart={this.onAudioLoadStart}
                     onCanPlay={this.onAudioReady}
                     onError={this.onAudioError}
                     onTimeUpdate={this.onAudioTimeUpdate}
@@ -176,15 +182,20 @@ class Player extends Component {
     // 上一首
     onPrev(event) {
         if (!this.state.songReady) return;
-        let index = this.props.currentIndex - 1;
-        if (index === -1) {
-            index = this.props.playlist.length - 1;
-        }
-        this.props.setCurrentIndex(index, this.props.playlist.toJS());
 
-        // 切换歌曲后，如果当前的播放状态跟之前的播放状态不一致，需要重新设置一下播放状态
-        if (!this.props.playing) {
-            this.onTogglePlaying(event);
+        if (this.props.playlist.length === 1) {
+            this.onAudioLoop();
+        } else {
+            let index = this.props.currentIndex - 1;
+            if (index === -1) {
+                index = this.props.playlist.length - 1;
+            }
+            this.props.setCurrentIndex(index, this.props.playlist.toJS());
+
+            // 切换歌曲后，如果当前的播放状态跟之前的播放状态不一致，需要重新设置一下播放状态
+            if (!this.props.playing) {
+                this.onTogglePlaying(event);
+            }
         }
 
         this.setState({
@@ -195,14 +206,19 @@ class Player extends Component {
     // 下一首
     onNext(event) {
         if (!this.state.songReady) return;
-        let index = this.props.currentIndex + 1;
-        if (index === this.props.playlist.length) {
-            index = 0;
-        }
-        this.props.setCurrentIndex(index, this.props.playlist.toJS());
 
-        if (!this.props.playing) {
-            this.onTogglePlaying(event);
+        if (this.props.playlist.length === 1) {
+            this.onAudioLoop();
+        } else {
+            let index = this.props.currentIndex + 1;
+            if (index === this.props.playlist.length) {
+                index = 0;
+            }
+            this.props.setCurrentIndex(index, this.props.playlist.toJS());
+
+            if (!this.props.playing) {
+                this.onTogglePlaying(event);
+            }
         }
 
         this.setState({
@@ -221,16 +237,29 @@ class Player extends Component {
         if (!this.props.playing) {
             this._togglePlaying();
         }
+
+        if (this.state.currentLyric) {
+            this.state.currentLyric.seek(currentTime * 1000);
+        }
+    }
+
+    onAudioLoadStart() {
+        this.setState({
+            songReady: true
+        }, () => {
+            if (this.state.currentLyric) {
+                this.state.currentLyric.stop();
+            }
+            setTimeout(() => {
+                this._play();
+                this.getLyric();
+            }, 100);
+        });
     }
 
     // 当歌曲加载完成后才执行
     onAudioReady() {
-        this.setState({
-            songReady: true
-        }, () => {
-            this._play();
-            this.getLyric();
-        });
+        console.log('onAudioReady');
     }
 
     // 当歌曲加载失败后，确保后续的操作能够正常运行
@@ -274,6 +303,10 @@ class Player extends Component {
     // 循环播放
     onAudioLoop() {
         this.refs.audio.currentTime = 0;
+        this.refs.audio.play();
+        if (this.state.currentLyric) {
+            this.state.currentLyric.seek();
+        }
     }
 
     onMiddleTouchStart(event) {
@@ -356,6 +389,12 @@ class Player extends Component {
                     this.state.currentLyric.play();
                 }
             });
+        }).catch(() => {
+            this.setState({
+                currentLyric: null,
+                playingLyric: '',
+                currentLineNum: 0,
+            })
         });
     }
 
@@ -371,6 +410,9 @@ class Player extends Component {
             } else {
                 this.refs.lyricList.scrollTo(0, 0, 1000);
             }
+            this.setState({
+                playingLyric: txt
+            });
         });
     }
 
@@ -381,6 +423,9 @@ class Player extends Component {
         this.audio = this.refs.audio;
         !playingState ? this.audio.play() : this.audio.pause();
         this.props.setPlayingState(!playingState);
+        if (this.state.currentLyric) {
+            this.state.currentLyric.togglePlay();
+        }
     }
 
     // 格式化时间

@@ -74,6 +74,14 @@ class MusicList extends PureComponent {
             this.minTranslateY = -this.imageHeight + RESERVED_HEIGHT;
             this.refs.list.refs.wrapper.style.top = `${this.imageHeight}px`;
         }
+
+        if (this.props.playlist.size) {
+            const bottom = this.props.playlist.size > 0 ? '60px' : '';
+            if (this.refs.list) {
+                this.refs.list.refs.wrapper.style.bottom = bottom;
+                this.refs.list.refresh();
+            }
+        }
     }
 
     onScroll(pos) {
@@ -115,6 +123,13 @@ class MusicList extends PureComponent {
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        playlist: state.getIn(['player', 'playlist'])
+    }
+};
+
+
 const mapDispatchToProps = (dispatch) => {
     return {
         selectPlay: function (item, index) {
@@ -126,4 +141,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(MusicList);
+export default connect(mapStateToProps, mapDispatchToProps)(MusicList);

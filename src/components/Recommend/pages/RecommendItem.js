@@ -9,7 +9,7 @@ class RecommendItem extends PureComponent {
         const { data } = this.props;
         return (
             <RecommendItemWrap>
-                <Scroll className="wrapper" list={data}>
+                <Scroll ref="wrapper" className="wrapper" list={data}>
                     <List className="content">
                         {
                             data.map(v => {
@@ -34,6 +34,10 @@ class RecommendItem extends PureComponent {
 
     componentDidMount () {
         initSimpleImg();
+    }
+
+    refresh() {
+        this.refs.wrapper.refresh();
     }
 }
 
