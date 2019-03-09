@@ -1,24 +1,37 @@
 import React, { Component, /*PureComponent*/ } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Switch, Route } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import RecommendItem from './pages/RecommendItem';
 import Loading from '../../base/loading';
-
+import RecommendDetail from '../RecommendDetail';
 import { RecommendWrap } from './style';
 import { actionCreators } from './store';
+import { actionCreators as recommendActionCreators } from '../RecommendDetail/store';
 
 class Recommend extends Component {
     render() {
-        const { type, list } = this.props;
+        const { type, list, location } = this.props;
 
         return (
             <RecommendWrap ref="recommend">
                 {
                     type === 0 ? '' :
-                        type === 1 ? <RecommendItem ref='recommendItem' detail={this.props.detail.bind(this)} data={list} /> :
+                        type === 1 ? <RecommendItem ref='recommendItem' selectItem={this.props.selectItem.bind(this)} data={list} /> :
                             type === 2 ? 'failed' : null
                 }
                 {!list.length ? <div className="loading-container"><Loading /></div> : null}
+                {/* 歌手详情页 */}
+                <TransitionGroup>
+                    <CSSTransition
+                        timeout={300}
+                        classNames="slider"
+                        key={location.key}>
+                        <Switch location={location}>
+                            <Route className="recommend-detail" exact path="/recommend/:id" component={RecommendDetail}/>
+                        </Switch>
+                    </CSSTransition>
+                </TransitionGroup>
             </RecommendWrap>
         )
     }
@@ -53,8 +66,9 @@ const mapDispatchToProps = (dispatch) => {
         getList() {
             dispatch(actionCreators.getList())
         },
-        detail(id) {
-            this.props.history.push(`/recommend/${id}`);
+        selectItem(item) {
+            this.props.history.push(`/recommend/${item.id}`);
+            dispatch(recommendActionCreators.saveRecommentDetail(item));
         }
     }
 }

@@ -14,7 +14,7 @@ class RecommendItem extends PureComponent {
                         {
                             data.map(v => {
                                 return (
-                                    <Item key={v.name} onClick={() => this.props.detail(v.id)}>
+                                    <Item key={v.name} onClick={() => this.props.selectItem(v)}>
                                         <Icon>
                                             <SimpleImg height={60} src={v.picUrl} />
                                         </Icon>

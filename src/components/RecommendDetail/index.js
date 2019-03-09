@@ -1,55 +1,53 @@
 import React, { Component, /* Fragment */ } from 'react';
 import { connect } from 'react-redux';
-import { SingerDetailWrap } from './style';
 import { actionCreators } from './store';
 import MusicList from '../MusicList';
+import { DiscWrapper } from './style';
 
-class SingerDetail extends Component {
+class RecommendDetail extends Component {
     constructor(props) {
         super(props);
 
         if (!this.props.detail.id) {
-            this.props.history.goBack();
+            this.props.history.push(`/recommend`);
             return ;
         }
     }
 
     render() {
-        // const { songs, type, detail, match, history } = this.props;
-
         // 当直接打开歌手详情页，而不是从上一级跳过来时，渲染一个空的div
         if (!this.props.detail.id) {
             return <div />;
         }
 
         return (
-            <SingerDetailWrap className="slider topic-wrap">
+            <DiscWrapper className="slider">
                 <MusicList musicData={this.props}/>
-            </SingerDetailWrap>
+            </DiscWrapper>
         )
     }
 
     componentDidMount() {
         if (this.props.detail.id) {
-            this.props.getSingerDetail(this.props.detail.id);
+            this.props.getRecommendDetail(this.props.detail.id);
         }
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        songs: state.getIn(['singerDetail', 'songs']),
-        type: state.getIn(['singerDetail', 'type']),
-        detail: state.getIn(['singerDetail', 'detail']),
+        songs: state.getIn(['recommendDetail', 'songs']),
+        type: state.getIn(['recommendDetail', 'type']),
+        detail: state.getIn(['recommendDetail', 'disc']),
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getSingerDetail: function (id) {
-            dispatch(actionCreators.getSingerDetail(id));
+        getRecommendDetail: function (id) {
+            dispatch(actionCreators.getRecommendDetail(id));
         }
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SingerDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(RecommendDetail);

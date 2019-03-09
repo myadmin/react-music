@@ -40,7 +40,7 @@ class Singer extends Component {
     }
 
     componentDidUpdate() {
-        if (this.props.playlist.size) {
+        if (this.props.playlist.size && this.refs.list) {
             const bottom = this.props.playlist.size > 0 ? '60px' : '';
             this.refs.singer.style.bottom = bottom;
             this.refs.list.onRefresh();
