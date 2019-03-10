@@ -8,6 +8,7 @@ import { reducer as PlayerReducer } from '../components/Player/store';
 import { reducer as RecommendDetail } from '../components/RecommendDetail/store';
 import { reducer as RankReducer } from '../components/Rank/store';
 import { reducer as RankDetailReducer } from '../components/RankDetail/store';
+import { reducer as SearchReducer } from '../components/Search/store'; 
 
 const reducer = combineReducers({
     header: HeaderReducer,
@@ -18,6 +19,7 @@ const reducer = combineReducers({
     player: PlayerReducer,
     rank: RankReducer,
     rankDetail: RankDetailReducer,
+    search: SearchReducer,
 });
 
 export default reducer;
