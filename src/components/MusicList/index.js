@@ -29,6 +29,7 @@ class MusicList extends PureComponent {
 
     render() {
         const { detail, songs, history, type } = this.props.musicData;
+        const { rank } = this.props;
 
         return (
             <MusicListWrap>
@@ -59,7 +60,7 @@ class MusicList extends PureComponent {
                                 ref="list"
                                 list={songs}>
                                 <div className="song-list-wrapper">
-                                    <SongList selectItem={this.selectItem} songs={songs} />
+                                    <SongList rank={rank} selectItem={this.selectItem} songs={songs} />
                                 </div>
                             </Scroll> :
                             type === 2 ? 'failed' : null

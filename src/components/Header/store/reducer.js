@@ -29,6 +29,10 @@ export default (state = defaultState, action) => {
             action.value = 'singer';
         }
 
+        if (action.value.indexOf('rank') > -1) {
+            action.value = 'rank';
+        }
+
         return state.set('current', action.value);
     }
 

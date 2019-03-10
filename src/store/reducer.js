@@ -6,6 +6,8 @@ import { reducer as SingerReducer } from '../components/Singer/store';
 import { reducer as SingerDetailReducer } from '../components/SingerDetail/store';
 import { reducer as PlayerReducer } from '../components/Player/store';
 import { reducer as RecommendDetail } from '../components/RecommendDetail/store';
+import { reducer as RankReducer } from '../components/Rank/store';
+import { reducer as RankDetailReducer } from '../components/RankDetail/store';
 
 const reducer = combineReducers({
     header: HeaderReducer,
@@ -13,7 +15,9 @@ const reducer = combineReducers({
     recommendDetail: RecommendDetail,
     singer: SingerReducer,
     singerDetail: SingerDetailReducer,
-    player: PlayerReducer
+    player: PlayerReducer,
+    rank: RankReducer,
+    rankDetail: RankDetailReducer,
 });
 
 export default reducer;
