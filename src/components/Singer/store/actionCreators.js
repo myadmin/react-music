@@ -49,7 +49,7 @@ const _normalizeSinger = (list) => {
             map.hot.items.push({
                 id: item.id,
                 name: item.name,
-                avatar: item.picUrl.replace(/^http/, 'https'),
+                avatar: item.picUrl.replace(/^http$/, 'https'),
             });
         }
         const key = item.albumSize;

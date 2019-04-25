@@ -34,7 +34,7 @@ function replaceImage (arrImages) {
     let ret = [];
     arrImages.forEach(element => {
         if (element.tracks.length) {
-            element.coverImgUrl = element.coverImgUrl.replace(/^http/, 'https');
+            element.coverImgUrl = element.coverImgUrl.replace(/^http$/, 'https');
             ret.push(element);
         }
     });

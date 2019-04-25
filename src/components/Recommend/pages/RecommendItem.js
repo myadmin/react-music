@@ -7,6 +7,7 @@ import { RecommendItemWrap, List, Item, Icon, Text } from '../style';
 class RecommendItem extends PureComponent {
     render () {
         const { data } = this.props;
+
         return (
             <RecommendItemWrap>
                 <Scroll ref="wrapper" className="wrapper" list={data}>

@@ -32,7 +32,7 @@ export const getList = () => {
 
 function replaceImage (arrImages) {
     arrImages.forEach(element => {
-        return element.picUrl = element.picUrl.replace(/^http/, 'https');
+        return element.picUrl = element.picUrl.replace(/^http$/, 'https');
     });
 
     return arrImages;
